@@ -3,11 +3,21 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const bodyParser = require('body-parser');
 var expressLayouts = require('express-ejs-layouts');
 
+// Router
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
+
+// Config Passport
+require('./config/passport')(passport);
+
+var Database = require('./models/database');
 
 var app = express();
 
@@ -17,7 +27,6 @@ app.set('view engine', 'ejs');
 
 // Layout
 app.use(expressLayouts);
-// app.set('layout', 'layout');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +34,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users', express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Express Session
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true,
+}));
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Connect flash
+app.use(flash());
+
+// Global Vars
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var actionControllers = require('../controllers/action-controllers');
+const { ensureAuthenticated } = require('../config/auth');
 
 // Dashboard
-router.get('/', (req, res) => {
-	res.render('index', { layout: 'layout' });
-});
+router.get('/', ensureAuthenticated, actionControllers.index);
 
 module.exports = router;

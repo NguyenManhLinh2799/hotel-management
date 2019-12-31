@@ -1,14 +1,21 @@
 var express = require('express');
 var router = express.Router();
+var accountControllers = require('../controllers/account-controllers');
+const { ensureAuthenticated } = require('../config/auth');
 
 // Register Page
-router.get('/register', (req, res) => {
-	res.render('pages/register', { layout: 'auth-layout' });
-});
+router.get('/register', accountControllers.registerPage);
 
 // Login Page
-router.get('/login', (req, res) => {
-	res.render('pages/login', { layout: 'auth-layout' });
-});
+router.get('/login', accountControllers.loginPage);
+
+// Register Handle
+router.post('/register', accountControllers.registerHandle);
+
+// Login Handle
+router.post('/login', accountControllers.loginHandle);
+
+// Logout Handle
+router.get('/logout', accountControllers.logoutHandle);
 
 module.exports = router;
