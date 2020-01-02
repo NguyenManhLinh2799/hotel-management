@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -125,34 +125,203 @@
 
     <div id="content-wrapper">
 
-      <div class="container-fluid">
+        <div class="container-fluid">
 
-        <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a href="index.html">Dashboard</a>
-          </li>
-          <li class="breadcrumb-item active">Blank Page</li>
-        </ol>
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="index.html">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">Blank Page</li>
+            </ol>
 
-        <!-- Page Content -->
-        <h1>Blank Page</h1>
-        <hr>
-        <p>This is a great starting point for new custom pages.</p>
+            <!-- Danh sách phòng -->
+            <!-- Thanh tìm kiếm -->
+            <h1>Danh sách phòng</h1>
 
-      </div>
-      <!-- /.container-fluid -->
+            <hr>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <form class="form-inline">
+                    <select class="custom-select" id="inputGroupSelect01">
+                        <option selected>Số lượng</option>
+                        <option value="1">2 người</option>
+                        <option value="2">4 người</option>
+                        <option value="3">6 người</option>
+                        <option value="3">8 người</option>
+                    </select>
+                </form>
 
-      <!-- Sticky Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright © Your Website 2019</span>
-          </div>
+
+                <form class="form-inline">
+                    <select class="custom-select" id="inputGroupSelect01">
+                        <option selected>Giá tiền</option>
+                        <option value="1">200.000-500.000VND</option>
+                        <option value="2">500.000-1.000.000VND</option>
+                        <option value="3">1.000.000-2.000.000VND</option>
+                        <option value="3">Lớn hơn 2.000.000VND</option>
+                    </select>
+                </form>
+
+                <form class="form-inline">
+                    <select class="custom-select" id="inputGroupSelect01">
+                        <option selected>Trạng thái</option>
+                        <option value="1">Đã đặt</option>
+                        <option value="2">Chưa đặt</option>
+                        <option value="3">Tất cả</option>
+                    </select>
+                </form>
+
+                <form class="form-inline my-2 my-lg-0">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
+
+            </nav>
+            <hr>
+
+            <!-- Hiển thị thông tin phòng dòng 1-->
+
+            <div class="row row-cols-3 row-cols-md-1">
+                <div class="col mb-1">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Phòng : 001
+                        </div>
+                        <a href="detail.html" title=""><img src="1.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Giá phòng : 10.000.000VND</li>
+                            <li class="list-group-item">Trạng thái : trống</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-2">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Phòng : 002
+                        </div>
+                        <a href="detail.html" title=""><img src="2.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Giá phòng : 5.000.000VND</li>
+                            <li class="list-group-item">Trạng thái : trống</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-2">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Phòng : 003
+                        </div>
+                        <a href="detail.html" title=""><img src="3.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <ul class="list-group-item">Giá phòng : 3.000.000VND</ul>
+                            <ul class="list-group-item">Trạng thái : trống</ul>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-2">
+                    <div class="card h-100 ">
+                        <div class="card-header">
+                            Phòng : 004
+                        </div>
+                        <a href="detail.html" title=""><img src="4.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Giá phòng : 4.000.000VND</li>
+                            <li class="list-group-item">Trạng thái : trống</li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Hiển thị thông tin phòng dòng 2-->
+
+            <div class="row row-cols-3 row-cols-md-1">
+                <div class="col mb-1">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Phòng : 005
+                        </div>
+                        <a href="detail.html" title=""><img src="5.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Giá phòng : 10.000.000VND</li>
+                            <li class="list-group-item">Trạng thái : trống</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-2">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Phòng : 006
+                        </div>
+                        <a href="detail.html" title=""><img src="6.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Giá phòng : 5.000.000VND</li>
+                            <li class="list-group-item">Trạng thái : trống</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-2">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            Phòng : 007
+                        </div>
+                        <a href="detail.html" title=""><img src="7.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <ul class="list-group-item">Giá phòng : 3.000.000VND</ul>
+                            <ul class="list-group-item">Trạng thái : trống</ul>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-2">
+                    <div class="card h-100 ">
+                        <div class="card-header">
+                            Phòng : 008
+                        </div>
+                        <a href="detail.html" title=""><img src="8.jpg" class="img-thumbnail" style="height:268px"></a>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Giá phòng : 4.000.000VND</li>
+                            <li class="list-group-item">Trạng thái : trống</li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hiển thị nút nhảy sang trang tiếp theo -->
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+
+
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+
         </div>
-      </footer>
-
-    </div>
     <!-- /.content-wrapper -->
 
   </div>
