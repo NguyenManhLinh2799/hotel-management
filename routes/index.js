@@ -6,4 +6,10 @@ const { ensureAuthenticated } = require('../config/auth');
 // Dashboard
 router.get('/', ensureAuthenticated, actionControllers.index);
 
+// Rooms
+router.get('/rooms', ensureAuthenticated, actionControllers.rooms);
+
+// Filter
+router.post('/rooms-filter', actionControllers.roomsFilter);
+
 module.exports = router;
