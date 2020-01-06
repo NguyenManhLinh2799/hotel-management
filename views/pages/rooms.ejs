@@ -8,28 +8,34 @@
             <option value="1" <% if (status == 1) { %>selected<% } %>>Đã đặt</option>
         </select>
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Lọc</button>
+        <a href="/new-room"><button class="btn btn-outline-success my-2 my-sm-0">+ Thêm phòng mới</button></a>
     </form>
 </nav>
 <hr>
 
 <% for (var i = 0; i < rooms.length;) { %>
-<div class="row row-cols-3 row-cols-md-1">
-    <% for (var j = 0; j < 4 && i < rooms.length; j++) { %>
-    <div class="col mb-1">
-        <div class="card h-100">
-            <div class="card-header">
-                Phòng: <%= rooms[i].roomID %>
-            </div>
-            <a href="/room-info" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
+    <div class="row row-cols-3 row-cols-md-1">
+        <% for (var j = 0; j < 4 && i < rooms.length; j++) { %>
+            <div class="col mb-1">
+                <div class="card h-100">
+                    <div class="card-header">
+                        Phòng:
+                        <%= rooms[i].roomID %>
+                    </div>
+                    <a href="/room-info" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
                     style="height:268px"></a>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Giá phòng: <%= priceConvert(rooms[i].price) %>VND/đêm</li>
-                <li class="list-group-item">
-                    Trạng thái: <% if (rooms[i].reserved == false) { %>Chưa đặt<% } else { %>Đã đặt<% } %>
-                </li>
-            </ul>
-        </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Giá phòng:
+                            <%= priceConvert(rooms[i].price) %>VND/đêm</li>
+                        <li class="list-group-item">
+                            Trạng thái:
+                            <% if (rooms[i].reserved == false) { %>Chưa đặt
+                                <% } else { %>Đã đặt
+                                    <% } %>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <% i++; } %>
     </div>
-    <% i++; } %>
-</div>
-<% } %>
+    <% } %>

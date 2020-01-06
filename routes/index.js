@@ -15,4 +15,8 @@ router.post('/rooms-filter', actionControllers.roomsFilter);
 // Room info
 router.get('/room-info', ensureAuthenticated, actionControllers.roomInfo);
 
+//new room
+router.get('/new-room', ensureAuthenticated, actionControllers.newRoom);
+
+
 module.exports = router;
