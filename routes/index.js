@@ -13,7 +13,10 @@ router.get('/rooms', ensureAuthenticated, actionControllers.rooms);
 router.post('/rooms-filter', actionControllers.roomsFilter);
 
 // Room info
-router.get('/room-info', ensureAuthenticated, actionControllers.roomInfo);
+router.get('/room-info/:id', ensureAuthenticated, actionControllers.roomInfo);
+
+// Order
+router.post('/order', actionControllers.order);
 
 //new room
 router.get('/new-room', ensureAuthenticated, actionControllers.newRoom);

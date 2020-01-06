@@ -1,9 +1,10 @@
 var Room = require('../models/room');
+var Order = require('../models/order');
 //var Diary = require('../models/diary');
 
 // Dashboard
 exports.index = (req, res) => {
-    res.render('index', { layout: 'layout', user: req.user });
+    res.render('index', { user: req.user });
 }
 
 // Rooms
@@ -11,18 +12,13 @@ exports.rooms = (req, res) => {
     var status = (typeof req.query.status != 'undefined') ? parseInt(req.query.status) : -1;
     var queryParams = {};
 
-    console.log(status);
-
     if (status != -1) { // -1 means all rooms
         queryParams.reserved = status;
     }
 
-    console.log(queryParams);
-
     Room.find(queryParams)
         .then(rooms => {
             res.render('pages/rooms', {
-                layout: 'layout',
                 user: req.user,
                 rooms: rooms,
                 priceConvert: numberWithCommas,
@@ -47,20 +43,47 @@ exports.roomsFilter = (req, res) => {
 
 // Room info
 exports.roomInfo = (req, res) => {
-        res.render('pages/room-info', {
-            layout: 'layout',
-            user: req.user
-        });
-    }
-    // new room
-exports.newRoom = function(req, res) {
-        res.render('pages/new-room', {
-            layout: 'layout',
-            user: req.user
-        });
-    }
-    // Convert number to string with commas
-var numberWithCommas = function(x) {
+    Room.findOne({ _id: req.params.id })
+        .then(room => {
+            res.render('pages/room-info', {
+                user: req.user,
+                room: room,
+                priceConvert: numberWithCommas
+            });
+        })
+        .catch(err => console.log(err));
+}
+
+// Order
+exports.order = (req, res) => {
+    const roomID = req.body.roomID;
+    const price = parseInt(req.body.price);
+    const customerName = req.body.customerName;
+    const customerID = req.body.customerID;
+    const customerTel = req.body.customerTel;
+
+    const start = new Date(req.body.start);
+    const exp = new Date(req.body.exp);
+    const numberOfDays = (exp - start) / (24 * 60 * 60 * 1000);
+    const totalCost = price * numberOfDays;
+
+    Room.findOneAndUpdate({ _id: roomID }, { reserved: true }, { new: true, useFindAndModify: false })
+        .then(room => {
+            var newOrder = new Order({ roomID, customerName, customerID, customerTel, start, exp, totalCost });
+            newOrder.save();
+            res.redirect('/room-info/' + roomID);
+        })
+        .catch(err => console.log(err));
+}
+
+// New room
+exports.newRoom = function (req, res) {
+    res.render('pages/new-room', {
+        user: req.user
+    });
+}
+// Convert number to string with commas
+var numberWithCommas = function (x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 

@@ -8,47 +8,49 @@
                     <tbody>
                         <tr>
                             <td>Số phòng</td>
-                            <td>001</td>
+                            <td><%= room.roomID %></td>
                         </tr>
                         <tr>
                             <td>Giá phòng</td>
-                            <td>1.000.000VND/đêm</td>
+                            <td><%= priceConvert(room.price) %>VND/đêm</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col">
-                <img src="2.jpg" alt="" style="width: 500px;height: 300px;">
+                <img src="<%= room.imgSrc %>" alt="" style="width: 500px;height: 300px;">
             </div>
         </div>
     </div>
     <div>
         <h2>Thông tin đặt phòng</h2>
-        <form>
+        <form action="/order" method="POST">
             <div class="form-group">
-                <label for="inputAddress">Họ tên khách hàng</label>
-                <input type="text" class="form-control" id="inputAddress">
+                <label for="customerName">Họ tên khách hàng</label>
+                <input type="text" class="form-control" id="customerName" name="customerName">
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="inputEmail4">CMND</label>
-                    <input type="email" class="form-control" id="inputEmail4">
+                    <label for="customerID">CMND</label>
+                    <input type="text" class="form-control" id="customerID" name="customerID">
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="inputPassword4">SĐT</label>
-                    <input type="password" class="form-control" id="inputPassword4">
+                    <label for="customerTel">SĐT</label>
+                    <input type="text" class="form-control" id="customerTel" name="customerTel">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="inputCity">Ngày đặt phòng</label>
-                    <input type="date" class="form-control" id="inputCity">
+                    <label for="start">Ngày đặt phòng</label>
+                    <input type="date" class="form-control" id="start" name="start">
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="inputCity">Ngày trả phòng</label>
-                    <input type="date" class="form-control" id="inputCity">
+                    <label for="exp">Ngày trả phòng</label>
+                    <input type="date" class="form-control" id="exp" name="exp">
                 </div>
             </div>
+            <input type="text" name="roomID" value="<%= room._id %>" hidden>
+            <input type="numer" name="price" value="<%= room.price %>" hidden>
             <button type="submit" class="btn btn-primary">Đặt phòng</button>
         </form>
     </div>

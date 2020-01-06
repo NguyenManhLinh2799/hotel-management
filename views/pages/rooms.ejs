@@ -22,7 +22,7 @@
                         Phòng:
                         <%= rooms[i].roomID %>
                     </div>
-                    <a href="/room-info" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
+                    <a href="/room-info/<%= rooms[i]._id %>" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
                     style="height:268px"></a>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Giá phòng:
