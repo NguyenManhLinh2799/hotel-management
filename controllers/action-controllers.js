@@ -44,6 +44,14 @@ exports.roomsFilter = (req, res) => {
 	res.redirect('/rooms' + queryStr);
 }
 
+// Room info
+exports.roomInfo = (req, res) => {
+	res.render('pages/room-info', {
+		layout: 'layout',
+		user: req.user
+	});
+}
+
 // Convert number to string with commas
 var numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");

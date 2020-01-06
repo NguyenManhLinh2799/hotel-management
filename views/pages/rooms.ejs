@@ -20,10 +20,10 @@
             <div class="card-header">
                 Phòng: <%= rooms[i].roomID %>
             </div>
-            <a href="detail.html" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
+            <a href="/room-info" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
                     style="height:268px"></a>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Giá phòng: <%= priceConvert(rooms[i].price) %>VND/Đêm</li>
+                <li class="list-group-item">Giá phòng: <%= priceConvert(rooms[i].price) %>VND/đêm</li>
                 <li class="list-group-item">
                     Trạng thái: <% if (rooms[i].reserved == false) { %>Chưa đặt<% } else { %>Đã đặt<% } %>
                 </li>
