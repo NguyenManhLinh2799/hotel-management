@@ -240,6 +240,33 @@ exports.searchResult = (req, res) => {
         .catch(err => console.log(err));
 }
 
+// Statistic
+exports.statistic = (req, res) => {
+    Order.aggregate([ // Group by date and count totalSales
+        {
+            '$group': {
+                '_id': {
+                    '$dateToString': {
+                        'format': '%d/%m/%Y',
+                        'date': '$start'
+                    }
+                },
+                'totalSales': {
+                    '$sum': '$totalCost'
+                }
+            }
+        }
+    ]).sort({ '_id': -1 })
+        .then(data => {
+            res.render('pages/statistic', {
+                title: 'Thống kê',
+                user: req.user,
+                data: data
+            })
+        })
+        .catch(err => console.log(err));
+}
+
 // Functions
 // Convert number to string with commas
 var numberWithCommas = function (x) {

@@ -37,4 +37,7 @@ router.post('/update-order', actionControllers.updateOrder);
 router.post('/search', actionControllers.search);
 router.get('/search', ensureAuthenticated, actionControllers.searchResult);
 
+// Statistic
+router.get('/statistic', ensureAuthenticated, actionControllers.statistic);
+
 module.exports = router;

@@ -1,0 +1,32 @@
+<canvas id="chart"></canvas>
+
+<input type="text" id="labels" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i]._id %>,<% } %>" hidden>
+<input type="text" id="data" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i].totalSales %>,<% } %>" hidden>
+
+<script>
+	let myChart = document.getElementById('chart').getContext('2d');
+	let labels = document.getElementById('labels').value.split(',');
+	labels.pop();
+	let dataStr = document.getElementById('data').value.split(',');
+	dataStr.pop();
+	let data = [];
+	// Parse each dataStr element to number
+	dataStr.forEach(entry => {
+		data.push(parseInt(entry))
+	});
+
+	let chart = new Chart(myChart, {
+		type: 'bar',
+		data: {
+			labels: labels.reverse(),
+			datasets: [{
+				label: 'Doanh thu',
+                data: data.reverse(),
+                backgroundColor: '#9999ff'
+			}]
+		},
+		option: {
+
+		}
+	});
+</script>
