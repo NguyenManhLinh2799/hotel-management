@@ -30,4 +30,11 @@ router.post('/update-room/:id', actionControllers.updateRoom);
 // Checkout
 router.get('/checkout/:id', ensureAuthenticated, actionControllers.checkout);
 
+// Update order
+router.post('/update-order', actionControllers.updateOrder);
+
+// Search
+router.post('/search', actionControllers.search);
+router.get('/search', ensureAuthenticated, actionControllers.searchResult);
+
 module.exports = router;

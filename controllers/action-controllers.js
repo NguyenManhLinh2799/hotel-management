@@ -21,7 +21,7 @@ exports.index = (req, res) => {
         })
         .catch(err => console.log(err));
 
-    res.render('index', { user: req.user });
+    res.render('index', { title: '', user: req.user });
 }
 
 // Rooms
@@ -41,6 +41,7 @@ exports.rooms = (req, res) => {
     Room.find(queryParams)
         .then(rooms => {
             res.render('pages/rooms', {
+                title: 'Quản lý danh sách phòng',
                 user: req.user,
                 rooms: rooms,
                 priceConvert: numberWithCommas,
@@ -79,6 +80,7 @@ exports.roomInfo = (req, res) => {
             Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
                 .then(order => {
                     res.render('pages/room-info', {
+                        title: 'Thông tin phòng ' + room.roomID,
                         user: req.user,
                         room: room,
                         order: order,
@@ -185,6 +187,55 @@ exports.checkout = (req, res) => {
                     res.redirect('/room-info/' + room._id);
                 })
                 .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+}
+
+// Update order
+exports.updateOrder = (req, res) => {
+    const roomID = req.query.id;
+    const price = parseInt(req.query.price);
+    const customerName = req.body.customerName;
+    const customerID = req.body.customerID;
+    const customerTel = req.body.customerTel;
+
+    const start = new Date(req.body.start);
+    const exp = new Date(req.body.exp);
+    const numberOfDays = (exp - start) / (24 * 60 * 60 * 1000);
+    const totalCost = price * numberOfDays;
+
+    var now = new Date();
+    Order.findOne({ roomID: roomID, exp: { $gte: now } })
+        .then(order => {
+            order.customerName = customerName;
+            order.customerID = customerID;
+            order.customerTel = customerTel;
+            order.start = start;
+            order.exp = exp;
+            order.totalCost = totalCost;
+            order.save();
+
+            res.redirect('/room-info/' + roomID);
+        })
+        .catch(err => console.log(err));
+}
+
+// Search
+exports.search = (req, res) => {
+    res.redirect('/search?key=' + req.body.key);
+}
+exports.searchResult = (req, res) => {
+    var key = req.query.key;
+
+    Room.find({ roomID: new RegExp(key, "i") })
+        .then(rooms => {
+            res.render('pages/search', {
+                title: 'Kết quả tìm kiếm',
+                user: req.user,
+                rooms: rooms,
+                key: key,
+                priceConvert: numberWithCommas
+            })
         })
         .catch(err => console.log(err));
 }
