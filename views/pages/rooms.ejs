@@ -1,4 +1,4 @@
-<h1>Danh sách phòng</h1>
+<h1>Quản lý danh sách phòng</h1><% include ../messages %>
 <hr>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <form class="form-inline" action="/rooms-filter" method="POST">
@@ -7,35 +7,79 @@
             <option value="0" <% if (status == 0) { %>selected<% } %>>Chưa đặt</option>
             <option value="1" <% if (status == 1) { %>selected<% } %>>Đã đặt</option>
         </select>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Lọc</button>
-        <a href="/new-room"><button class="btn btn-outline-success my-2 my-sm-0">+ Thêm phòng mới</button></a>
+        <button class="btn btn-primary" type="submit">Lọc</button>
     </form>
+    <button style="margin-left: 10px;" class="btn btn-primary" data-toggle="modal" data-target="#newRoomModal">+ Thêm phòng mới</button>
 </nav>
 <hr>
 
 <% for (var i = 0; i < rooms.length;) { %>
-    <div class="row row-cols-3 row-cols-md-1">
-        <% for (var j = 0; j < 4 && i < rooms.length; j++) { %>
-            <div class="col mb-1">
-                <div class="card h-100">
-                    <div class="card-header">
-                        Phòng:
-                        <%= rooms[i].roomID %>
-                    </div>
-                    <a href="/room-info/<%= rooms[i]._id %>" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
-                    style="height:268px"></a>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Giá phòng:
-                            <%= priceConvert(rooms[i].price) %>VND/đêm</li>
-                        <li class="list-group-item">
-                            Trạng thái:
-                            <% if (rooms[i].reserved == false) { %>Chưa đặt
-                                <% } else { %>Đã đặt
-                                    <% } %>
-                        </li>
-                    </ul>
-                </div>
+<div class="row row-cols-3 row-cols-md-1">
+    <% for (var j = 0; j < 4 && i < rooms.length; j++) { %>
+    <div class="col mb-1">
+        <div class="card h-100">
+            <div class="card-header">
+                Phòng:
+                <%= rooms[i].roomID %>
             </div>
-            <% i++; } %>
+            <a href="/room-info/<%= rooms[i]._id %>" title=""><img src="<%= rooms[i].imgSrc %>" class="img-thumbnail"
+                    style="height:250px"></a>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Giá phòng:
+                    <%= priceConvert(rooms[i].price) %>VND/đêm</li>
+                <li class="list-group-item">
+                    Trạng thái:
+                    <% if (rooms[i].reserved == false) { %>Chưa đặt
+                    <% } else { %>Đã đặt
+                    <% } %>
+                </li>
+            </ul>
+        </div>
     </div>
-    <% } %>
+    <% i++; } %>
+</div>
+<% } %>
+
+<!-- New Room Modal -->
+<div class="modal fade" id="newRoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nhập thông tin phòng mới</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form action="/new-room" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" id="inputRoomID" class="form-control" placeholder="Số phòng"
+                                name="roomID" required="required" autofocus="autofocus">
+                            <label for="inputRoomID">Số phòng</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="number" id="inputMoney" class="form-control" placeholder="Giá phòng"
+                                name="price" required="required">
+                            <label for="inputMoney">Giá phòng</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" id="inputImg" class="form-control" placeholder="Link ảnh" name="imgSrc"
+                                required="required">
+                            <label for="inputImg">Link ảnh</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy bỏ</button>
+                    <button class="btn btn-danger" type="submit">Tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -14,44 +14,142 @@
                             <td>Giá phòng</td>
                             <td><%= priceConvert(room.price) %>VND/đêm</td>
                         </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="<% if (room.reserved == false) { %>#updateModal<% } else { %>#failedModal<% } %>">Chỉnh
+                                    sửa</button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    style="margin-left: 10px;"
+                                    data-target="<% if (room.reserved == false) { %>#deleteModal<% } else { %>#failedModal<% } %>">Xóa
+                                    phòng</button>
+                            </td>
+                            <td><% include ../messages %></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col">
-                <img src="<%= room.imgSrc %>" alt="" style="width: 500px;height: 300px;">
+                <img src="<%= room.imgSrc %>" alt="" style="width: 500px;height: 400px;">
             </div>
         </div>
     </div>
     <div>
         <h2>Thông tin đặt phòng</h2>
-        <form action="/order" method="POST">
+        <form action="/order?id=<%= room._id %>&price=<%= room.price %>" method="POST">
             <div class="form-group">
                 <label for="customerName">Họ tên khách hàng</label>
-                <input type="text" class="form-control" id="customerName" name="customerName">
+                <input type="text" class="form-control" id="customerName" name="customerName"
+                    <% if (order != null) { %>value="<%= order.customerName %>" disabled<% } %>>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="customerID">CMND</label>
-                    <input type="text" class="form-control" id="customerID" name="customerID">
+                    <input type="text" class="form-control" id="customerID" name="customerID"
+                        <% if (order != null) { %>value="<%= order.customerID %>" disabled<% } %>>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="customerTel">SĐT</label>
-                    <input type="text" class="form-control" id="customerTel" name="customerTel">
+                    <input type="text" class="form-control" id="customerTel" name="customerTel"
+                        <% if (order != null) { %>value="<%= order.customerTel %>" disabled<% } %>>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="start">Ngày đặt phòng</label>
-                    <input type="date" class="form-control" id="start" name="start">
+                    <input type="date" class="form-control" id="start" name="start"
+                        <% if (order != null) { %>value="<%= changeDateFormat(order.start) %>" disabled<% } %>>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="exp">Ngày trả phòng</label>
-                    <input type="date" class="form-control" id="exp" name="exp">
+                    <input type="date" class="form-control" id="exp" name="exp"
+                        <% if (order != null) { %>value="<%= changeDateFormat(order.exp) %>" disabled<% } %>>
                 </div>
             </div>
-            <input type="text" name="roomID" value="<%= room._id %>" hidden>
-            <input type="numer" name="price" value="<%= room.price %>" hidden>
-            <button type="submit" class="btn btn-primary">Đặt phòng</button>
+            <% if (order == null) { %><button type="submit" class="btn btn-primary">Đặt phòng</button><% } %>
         </form>
+        <% if(order != null) {%><a href="/checkout/<%= room._id %>"><button class="btn btn-danger">Trả phòng</button></a><% } %>
+    </div>
+
+    <!-- Delete Modal-->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Bạn muốn xóa phòng?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Chọn "Xóa vĩnh viễn" nếu bạn chắc chắn muốn xóa phòng hiện tại.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy bỏ</button>
+                    <a class="btn btn-danger" href="/delete-room/<%= room._id %>">Xóa vĩnh viễn</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Modal-->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thay đổi thông tin phòng</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/update-room/<%= room._id %>" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="inputRoomID" class="form-control" placeholder="Số phòng"
+                                    name="roomID" required="required" autofocus="autofocus" value="<%= room.roomID %>">
+                                <label for="inputRoomID">Số phòng</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="number" id="inputMoney" class="form-control" placeholder="Giá phòng"
+                                    name="price" required="required" value="<%= room.price %>">
+                                <label for="inputMoney">Giá phòng</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="inputImg" class="form-control" placeholder="Link ảnh"
+                                    name="imgSrc" required="required" value="<%= room.imgSrc %>">
+                                <label for="inputImg">Link ảnh</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy bỏ</button>
+                        <button class="btn btn-danger" type="submit">Thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failed Modal-->
+    <div class="modal fade" id="failedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Không thể thực hiện tác vụ này</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Bạn không thể chỉnh sửa hay xóa phòng đang có người thuê.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy bỏ</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

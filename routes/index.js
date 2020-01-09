@@ -18,8 +18,16 @@ router.get('/room-info/:id', ensureAuthenticated, actionControllers.roomInfo);
 // Order
 router.post('/order', actionControllers.order);
 
-//new room
-router.get('/new-room', ensureAuthenticated, actionControllers.newRoom);
+// New room
+router.post('/new-room', actionControllers.newRoom);
 
+// Delete room
+router.get('/delete-room/:id', ensureAuthenticated, actionControllers.deleteRoom);
+
+// Update room
+router.post('/update-room/:id', actionControllers.updateRoom);
+
+// Checkout
+router.get('/checkout/:id', ensureAuthenticated, actionControllers.checkout);
 
 module.exports = router;

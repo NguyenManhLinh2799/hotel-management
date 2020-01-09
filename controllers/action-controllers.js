@@ -4,16 +4,38 @@ var Order = require('../models/order');
 
 // Dashboard
 exports.index = (req, res) => {
+    // Update all room status by order exp
+    Room.find({})
+        .then(rooms => {
+            var now = new Date();
+            rooms.forEach(room => {
+                Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
+                    .then(order => {
+                        if (!order) { // No result, which mean the room is ready to use
+                            room.reserved = false;
+                            room.save();
+                        }
+                    });
+            })
+                .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+
     res.render('index', { user: req.user });
 }
 
 // Rooms
 exports.rooms = (req, res) => {
     var status = (typeof req.query.status != 'undefined') ? parseInt(req.query.status) : -1;
+    var error = (typeof req.query.error != 'undefined') ? req.query.error : '';
     var queryParams = {};
+    var errors = [];
 
     if (status != -1) { // -1 means all rooms
         queryParams.reserved = status;
+    }
+    if (error != '') {
+        errors.push({ msg: error });
     }
 
     Room.find(queryParams)
@@ -23,7 +45,9 @@ exports.rooms = (req, res) => {
                 rooms: rooms,
                 priceConvert: numberWithCommas,
                 // Remain selection
-                status: status
+                status: status,
+                // Alert Errors
+                errors: errors,
             });
         })
         .catch(err => console.log(err));
@@ -43,21 +67,36 @@ exports.roomsFilter = (req, res) => {
 
 // Room info
 exports.roomInfo = (req, res) => {
+    var error = (typeof req.query.error != 'undefined') ? req.query.error : '';
+    var errors = [];
+    if (error != '') {
+        errors.push({ msg: error });
+    }
+
     Room.findOne({ _id: req.params.id })
         .then(room => {
-            res.render('pages/room-info', {
-                user: req.user,
-                room: room,
-                priceConvert: numberWithCommas
-            });
+            var now = new Date();
+            Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
+                .then(order => {
+                    res.render('pages/room-info', {
+                        user: req.user,
+                        room: room,
+                        order: order,
+                        priceConvert: numberWithCommas,
+                        changeDateFormat: changeDateFormat,
+                        // Alert Errors
+                        errors: errors
+                    });
+                })
+                .catch(err => console.log(err));
         })
         .catch(err => console.log(err));
 }
 
 // Order
 exports.order = (req, res) => {
-    const roomID = req.body.roomID;
-    const price = parseInt(req.body.price);
+    const roomID = req.query.id;
+    const price = parseInt(req.query.price);
     const customerName = req.body.customerName;
     const customerID = req.body.customerID;
     const customerTel = req.body.customerTel;
@@ -67,54 +106,101 @@ exports.order = (req, res) => {
     const numberOfDays = (exp - start) / (24 * 60 * 60 * 1000);
     const totalCost = price * numberOfDays;
 
-    Room.findOneAndUpdate({ _id: roomID }, { reserved: true }, { new: true, useFindAndModify: false })
+    Room.findOne({ _id: roomID })
         .then(room => {
             var newOrder = new Order({ roomID, customerName, customerID, customerTel, start, exp, totalCost });
             newOrder.save();
+            room.reserved = true;
+            room.save();
+
             res.redirect('/room-info/' + roomID);
         })
         .catch(err => console.log(err));
 }
 
 // New room
-exports.newRoom = function (req, res) {
-    res.render('pages/new-room', {
-        user: req.user
-    });
+exports.newRoom = (req, res) => {
+    const { roomID, price, imgSrc } = req.body;
+
+    Room.findOne({ roomID: roomID })
+        .then(room => {
+            if (room) {
+                res.redirect('/rooms?error=Số%20phòng%20đã%20tồn%20tại');
+            } else {
+                const newRoom = new Room({ roomID, price, imgSrc });
+                newRoom.save();
+                res.redirect('/rooms');
+            }
+        })
+        .catch(err => console.log(err));
 }
+
+// Delete room
+exports.deleteRoom = (req, res) => {
+    Room.deleteOne({ _id: req.params.id })
+        .then(result => {
+            res.redirect('/rooms');
+        })
+        .catch(err => console.log(err));
+}
+
+// Update room
+exports.updateRoom = (req, res) => {
+    const newID = req.body.roomID;
+    const newPrice = req.body.price;
+    const newImgSrc = req.body.imgSrc;
+
+    Room.findOne({ roomID: newID, _id: { $ne: req.params.id } }) // Find whether a room with newID existed (except itself)
+        .then(result => {
+            if (result) {
+                res.redirect('/room-info/' + req.params.id + '?error=Số%20phòng%20đã%20tồn%20tại');
+            } else {
+                Room.findOne({ _id: req.params.id })
+                    .then(room => {
+                        room.roomID = newID;
+                        room.price = parseInt(newPrice);
+                        room.imgSrc = newImgSrc;
+                        room.save();
+
+                        res.redirect('/room-info/' + room._id);
+                    })
+                    .catch(err => console.log(err));
+            }
+        })
+        .catch(err => console.log(err));
+}
+
+// Checkout
+exports.checkout = (req, res) => {
+    Room.findOne({ _id: req.params.id })
+        .then(room => {
+            var now = new Date();
+            Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
+                .then(order => {
+                    room.reserved = false;
+                    room.save();
+                    order.exp = now;
+                    order.save();
+
+                    res.redirect('/room-info/' + room._id);
+                })
+                .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+}
+
+// Functions
 // Convert number to string with commas
 var numberWithCommas = function (x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+// Change date format
+var changeDateFormat = function (date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
+}
+
 //<h6 style="color: aliceblue;"><%= user.name %> (<%= user.position %>)</h6>
-
-
-
-// // The statistics by date
-// exports.diaryDate = function(inputDate) {
-//         var date = new Date;
-//         var today = date.getDate();
-//         if (date != 0) {
-//             Diary.findOne(Diary.date = inputDate)
-//         } else {
-//             Diary.findOne(Diary.date= today)
-//         }
-
-//     }
-
-// The statistics by month
-// exports.diaryMonth = function(month){
-//     var moneyRecive =0;
-//     var moneySpeed =0;
-//     var difference =0;
-//     var date = new Date();
-//     var month = date.getMonth();
-//     var  a = Diary.find().where(Diary.date.getMonth).equals(month);
-//     for (i =0; i < length(a); i++){
-
-//     }
-
-// }
-// The statistics by precious
-// The statistics by year
