@@ -66,7 +66,20 @@ exports.logoutHandle = (req, res) => {
     res.redirect('/users/login');
 }
 
-// Profile Page
-// exports.profile = (req, res) => {
-//     res.render('pages/account/profile', { user: req.user });
-// }
+// Update
+exports.update = (req, res) => {
+    const { name, phone, email, address, position } = req.body;
+    console.log({ name, phone, email, address, position });
+
+    Staff.findOne({ _id: req.user._id })
+        .then(staff => {
+            staff.name = name;
+            staff.phone = phone;
+            staff.address = address;
+            staff.position = position;
+            staff.save();
+        })
+        .catch(err => console.log(err));
+
+    res.redirect('/');
+}

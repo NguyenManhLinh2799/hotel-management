@@ -1,3 +1,4 @@
+<!-- Info Modal -->
 <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -8,16 +9,50 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>Họ tên: <%= user.name %></p>
-                <p>SĐT: <%= user.phone %></p>
-                <p>Email: <%= user.email %></p>
-                <p>Địa chỉ: <%= user.address %></p>
-                <p>Chức vụ: <%= user.position %></p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
-            </div>
+            <form action="/users/update-info" method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" id="inputName" class="form-control" placeholder="Họ tên" required
+                                name="name" required="required" autofocus="autofocus" value="<%= user.name %>">
+                            <label for="inputName">Họ tên</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" id="inputPhone" class="form-control" placeholder="SĐT" required
+                                name="phone" required="required"
+                                <% if (typeof user.phone != 'undefined') { %>value="<%= user.phone %>"<% } %>>
+                            <label for="inputPhone">SĐT</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="email" id="inputEmail" class="form-control" placeholder="Email" disabled
+                                name="email" required="required" value="<%= user.email %>">
+                            <label for="inputEmail">Email</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" id="inputAddress" class="form-control" placeholder="Địa chỉ" required
+                                name="address" required="required"
+                                <% if (typeof user.phone != 'undefined') { %>value="<%= user.address %>"<% } %>>
+                            <label for="inputAddress">Địa chỉ</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <h6>Chức vụ</h6>
+                        <input type="radio" name="position" value="manager" <% if (user.position == 'manager') { %>checked<% } %>> Quản lý<br>
+                        <input type="radio" name="position" value="accountant" <% if (user.position == 'accountant') { %>checked<% } %>> Kế toán viên<br>
+                        <input type="radio" name="position" value="receptionist" <% if (user.position == 'receptionist') { %>checked<% } %>> Lễ tân<br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Đóng</button>
+                    <button class="btn btn-primary" type="submit">Cập nhật</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

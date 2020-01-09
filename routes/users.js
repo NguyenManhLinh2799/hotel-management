@@ -18,4 +18,7 @@ router.post('/login', accountControllers.loginHandle);
 // Logout Handle
 router.get('/logout', accountControllers.logoutHandle);
 
+// Update
+router.post('/update-info', accountControllers.update);
+
 module.exports = router;

@@ -305,7 +305,8 @@ exports.statistic = (req, res) => {
                 title: 'Thống kê',
                 user: req.user,
                 data: data,
-                changeDateFormat: changeDateFormat
+                changeDateFormat: changeDateFormat,
+                priceConvert: numberWithCommas
             })
         })
         .catch(err => console.log(err));

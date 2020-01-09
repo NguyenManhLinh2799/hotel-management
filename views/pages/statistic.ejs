@@ -1,7 +1,36 @@
+<hr>
+<h2>Biểu đồ</h2>
+<hr>
+
 <canvas id="chart"></canvas>
 
 <input type="text" id="labels" value="<% for (var i = 0; i < data.length; i++) {%><%= changeDateFormat(data[i]._id) %>,<% } %>" hidden>
 <input type="text" id="data" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i].totalSales %>,<% } %>" hidden>
+
+<hr>
+<h2>Bảng thống kê</h2>
+<hr>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Ngày</th>
+                <th scope="col">Tổng doanh thu</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (var i = 0; i < data.length; i++) { %>
+            <tr>
+                <td><%= changeDateFormat(data[i]._id) %></td>
+                <td><%= priceConvert(data[i].totalSales) %>VND</td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<button class="btn btn-primary">In thống kê</button>
 
 <script>
 	let myChart = document.getElementById('chart').getContext('2d');
