@@ -4,24 +4,44 @@ var Order = require('../models/order');
 
 // Dashboard
 exports.index = (req, res) => {
-    // Update all room status by order exp
-    Room.find({})
-        .then(rooms => {
-            var now = new Date();
-            rooms.forEach(room => {
-                Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
-                    .then(order => {
-                        if (!order) { // No result, which mean the room is ready to use
-                            room.reserved = false;
-                            room.save();
-                        }
+    Order.aggregate([ // Statistic
+        {
+            '$group': {
+                '_id': '$start',
+                'totalSales': {
+                    '$sum': '$totalCost'
+                }
+            }
+        }
+    ]).sort({ '_id': 1 })
+        .then(data => {
+            // Update all room status by order exp
+            Room.find({})
+                .then(rooms => {
+                    var now = new Date();
+                    rooms.forEach(room => {
+                        Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
+                            .then(order => {
+                                if (!order) { // No result, which mean the room is ready to use
+                                    room.reserved = false;
+                                    room.save();
+                                }
+                            })
+                            .catch(err => console.log(err));
+                    })
+
+                    // Render
+                    res.render('index', {
+                        title: '',
+                        user: req.user,
+                        data: data,
+                        rooms: rooms,
+                        priceConvert: numberWithCommas,
+                        changeDateFormat: changeDateFormat
                     });
-            })
+                })
                 .catch(err => console.log(err));
         })
-        .catch(err => console.log(err));
-
-    res.render('index', { title: '', user: req.user });
 }
 
 // Rooms
@@ -40,6 +60,20 @@ exports.rooms = (req, res) => {
 
     Room.find(queryParams)
         .then(rooms => {
+            // Update all room status by order exp
+            var now = new Date();
+            rooms.forEach(room => {
+                Order.findOne({ roomID: room._id, exp: { $gte: now } }) // Find order by roomID and exp
+                    .then(order => {
+                        if (!order) { // No result, which mean the room is ready to use
+                            room.reserved = false;
+                            room.save();
+                        }
+                    })
+                    .catch(err => console.log(err));
+            })
+
+            // Render
             res.render('pages/rooms', {
                 title: 'Quản lý danh sách phòng',
                 user: req.user,
@@ -110,12 +144,16 @@ exports.order = (req, res) => {
 
     Room.findOne({ _id: roomID })
         .then(room => {
-            var newOrder = new Order({ roomID, customerName, customerID, customerTel, start, exp, totalCost });
-            newOrder.save();
-            room.reserved = true;
-            room.save();
+            if (exp.getTime() <= start.getTime()) {
+                res.redirect('/room-info/' + room._id + '?error=Ngày%20kết%20thúc%20phải%20lớn%20hơn%20ngày%20đặt%20phòng');
+            } else {
+                var newOrder = new Order({ roomID, customerName, customerID, customerTel, start, exp, totalCost });
+                newOrder.save();
+                room.reserved = true;
+                room.save();
 
-            res.redirect('/room-info/' + roomID);
+                res.redirect('/room-info/' + roomID);
+            }
         })
         .catch(err => console.log(err));
 }
@@ -123,6 +161,11 @@ exports.order = (req, res) => {
 // New room
 exports.newRoom = (req, res) => {
     const { roomID, price, imgSrc } = req.body;
+
+    if (price <= 0) {
+        res.redirect('/rooms?error=Giá%20phòng%20phải%20là%20số%20dương');
+        return;
+    }
 
     Room.findOne({ roomID: roomID })
         .then(room => {
@@ -151,6 +194,11 @@ exports.updateRoom = (req, res) => {
     const newID = req.body.roomID;
     const newPrice = req.body.price;
     const newImgSrc = req.body.imgSrc;
+
+    if (newPrice <= 0) {
+        res.redirect('/room-info/' + req.params.id + '?error=Giá%20phòng%20phải%20là%20số%20dương');
+        return;
+    }
 
     Room.findOne({ roomID: newID, _id: { $ne: req.params.id } }) // Find whether a room with newID existed (except itself)
         .then(result => {
@@ -245,23 +293,19 @@ exports.statistic = (req, res) => {
     Order.aggregate([ // Group by date and count totalSales
         {
             '$group': {
-                '_id': {
-                    '$dateToString': {
-                        'format': '%d/%m/%Y',
-                        'date': '$start'
-                    }
-                },
+                '_id': '$start',
                 'totalSales': {
                     '$sum': '$totalCost'
                 }
             }
         }
-    ]).sort({ '_id': -1 })
+    ]).sort({ '_id': 1 })
         .then(data => {
             res.render('pages/statistic', {
                 title: 'Thống kê',
                 user: req.user,
-                data: data
+                data: data,
+                changeDateFormat: changeDateFormat
             })
         })
         .catch(err => console.log(err));
@@ -278,7 +322,7 @@ var changeDateFormat = function (date) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    return year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
+    return (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' +  year;
 }
 
 //<h6 style="color: aliceblue;"><%= user.name %> (<%= user.position %>)</h6>

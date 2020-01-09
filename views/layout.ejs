@@ -50,7 +50,7 @@
 
 		<!-- Navbar Staff Name -->
 		<div class="d-none d-md-inline-block ml-auto mr-0 mr-md-3 my-2 my-md-0">
-			
+			<h6 style="color: aliceblue;"><%= user.name %> (<%= user.position %>)</h6>
 		</div>
 
 		<!-- Navbar -->
@@ -61,7 +61,7 @@
 					<i class="fas fa-user-circle fa-fw"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-					<a class="dropdown-item" href="#">Thông tin cá nhân</a>
+					<a class="dropdown-item" href="#" data-toggle="modal" data-target="#infoModal">Thông tin cá nhân</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Đăng xuất</a>
 				</div>
@@ -149,6 +149,9 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Info Modal-->
+	<% include ./info %>
 
 	<!-- Bootstrap core JavaScript-->
 	<script src="vendor/jquery/jquery.min.js"></script>

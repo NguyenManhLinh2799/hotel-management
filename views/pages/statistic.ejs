@@ -1,6 +1,6 @@
 <canvas id="chart"></canvas>
 
-<input type="text" id="labels" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i]._id %>,<% } %>" hidden>
+<input type="text" id="labels" value="<% for (var i = 0; i < data.length; i++) {%><%= changeDateFormat(data[i]._id) %>,<% } %>" hidden>
 <input type="text" id="data" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i].totalSales %>,<% } %>" hidden>
 
 <script>
@@ -18,10 +18,10 @@
 	let chart = new Chart(myChart, {
 		type: 'bar',
 		data: {
-			labels: labels.reverse(),
+			labels: labels,
 			datasets: [{
 				label: 'Doanh thu',
-                data: data.reverse(),
+                data: data,
                 backgroundColor: '#9999ff'
 			}]
 		},

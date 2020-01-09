@@ -38,30 +38,30 @@
         <form action="/<% if (order != null) { %>update-<% } %>order?id=<%= room._id %>&price=<%= room.price %>" method="POST">
             <div class="form-group">
                 <label for="customerName">Họ tên khách hàng</label>
-                <input type="text" class="form-control" id="customerName" name="customerName"
+                <input type="text" class="form-control" id="customerName" name="customerName" required
                     <% if (order != null) { %>value="<%= order.customerName %>"<% } %>>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="customerID">CMND</label>
-                    <input type="text" class="form-control" id="customerID" name="customerID"
+                    <input type="text" class="form-control" id="customerID" name="customerID" required
                         <% if (order != null) { %>value="<%= order.customerID %>"<% } %>>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="customerTel">SĐT</label>
-                    <input type="text" class="form-control" id="customerTel" name="customerTel"
+                    <input type="text" class="form-control" id="customerTel" name="customerTel" required
                         <% if (order != null) { %>value="<%= order.customerTel %>"<% } %>>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="start">Ngày đặt phòng</label>
-                    <input type="date" class="form-control" id="start" name="start"
+                    <input type="date" class="form-control" id="start" name="start" required
                         <% if (order != null) { %>value="<%= changeDateFormat(order.start) %>"<% } %>>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="exp">Ngày trả phòng</label>
-                    <input type="date" class="form-control" id="exp" name="exp"
+                    <input type="date" class="form-control" id="exp" name="exp" required
                         <% if (order != null) { %>value="<%= changeDateFormat(order.exp) %>"<% } %>>
                 </div>
             </div>
@@ -106,21 +106,21 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <div class="form-label-group">
-                                <input type="text" id="inputRoomID" class="form-control" placeholder="Số phòng"
+                                <input type="text" id="inputRoomID" class="form-control" placeholder="Số phòng" required
                                     name="roomID" required="required" autofocus="autofocus" value="<%= room.roomID %>">
                                 <label for="inputRoomID">Số phòng</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-label-group">
-                                <input type="number" id="inputMoney" class="form-control" placeholder="Giá phòng"
+                                <input type="number" id="inputMoney" class="form-control" placeholder="Giá phòng" required
                                     name="price" required="required" value="<%= room.price %>">
                                 <label for="inputMoney">Giá phòng</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-label-group">
-                                <input type="text" id="inputImg" class="form-control" placeholder="Link ảnh"
+                                <input type="text" id="inputImg" class="form-control" placeholder="Link ảnh" required
                                     name="imgSrc" required="required" value="<%= room.imgSrc %>">
                                 <label for="inputImg">Link ảnh</label>
                             </div>
