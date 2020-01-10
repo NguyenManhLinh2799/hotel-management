@@ -1,61 +1,77 @@
-<hr>
-<h2>Biểu đồ</h2>
-<hr>
+<div>
+    <hr>
+    <h2>Biểu đồ</h2>
+    <hr>
 
-<canvas id="chart"></canvas>
+    <canvas id="chart"></canvas>
 
-<input type="text" id="labels" value="<% for (var i = 0; i < data.length; i++) {%><%= changeDateFormat(data[i]._id) %>,<% } %>" hidden>
-<input type="text" id="data" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i].totalSales %>,<% } %>" hidden>
+    <input type="text" id="labels"
+        value="<% for (var i = 0; i < data.length; i++) {%><%= changeDateFormat(data[i]._id) %>,<% } %>" hidden>
+    <input type="text" id="data" value="<% for (var i = 0; i < data.length; i++) {%><%= data[i].totalSales %>,<% } %>"
+        hidden>
 
-<hr>
-<h2>Bảng thống kê</h2>
-<hr>
+    <hr>
+    <h2>Bảng thống kê</h2>
+    <hr>
 
-<div class="container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Ngày</th>
-                <th scope="col">Tổng doanh thu</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for (var i = 0; i < data.length; i++) { %>
-            <tr>
-                <td><%= changeDateFormat(data[i]._id) %></td>
-                <td><%= priceConvert(data[i].totalSales) %>VND</td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
+    <div class="container" id="report-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Ngày</th>
+                    <th scope="col">Tổng doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (var i = 0; i < data.length; i++) { %>
+                <tr>
+                    <td><%= changeDateFormat(data[i]._id) %></td>
+                    <td><%= priceConvert(data[i].totalSales) %>VND</td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<button class="btn btn-primary">In thống kê</button>
+<a href="javascript:genPDF()"><button class="btn btn-primary">In thống kê</button></a>
 
 <script>
-	let myChart = document.getElementById('chart').getContext('2d');
-	let labels = document.getElementById('labels').value.split(',');
-	labels.pop();
-	let dataStr = document.getElementById('data').value.split(',');
-	dataStr.pop();
-	let data = [];
-	// Parse each dataStr element to number
-	dataStr.forEach(entry => {
-		data.push(parseInt(entry))
-	});
+    let myChart = document.getElementById('chart').getContext('2d');
+    let labels = document.getElementById('labels').value.split(',');
+    labels.pop();
+    let dataStr = document.getElementById('data').value.split(',');
+    dataStr.pop();
+    let data = [];
+    // Parse each dataStr element to number
+    dataStr.forEach(entry => {
+        data.push(parseInt(entry))
+    });
 
-	let chart = new Chart(myChart, {
-		type: 'bar',
-		data: {
-			labels: labels,
-			datasets: [{
-				label: 'Doanh thu',
+    let chart = new Chart(myChart, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu',
                 data: data,
                 backgroundColor: '#9999ff'
-			}]
-		},
-		option: {
+            }]
+        },
+        option: {
 
-		}
-	});
+        }
+    });
+</script>
+
+<script>
+    function genPDF() {
+        html2canvas(document.body)
+            .then(canvas => {
+                var img = canvas.toDataURL('image/png');
+                var doc = new jsPDF();
+                doc.addImage(img, 'JPEG', 15, 40, 180, 200);
+                doc.save('report.pdf');
+            });
+    }
 </script>
