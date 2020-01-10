@@ -56,7 +56,7 @@
 
 		<!-- Navbar Staff Name -->
 		<div class="d-none d-md-inline-block ml-auto mr-0 mr-md-3 my-2 my-md-0">
-			
+			<h6 style="color: aliceblue;"><%= user.name %> (<%= user.position %>)</h6>
 		</div>
 
 		<!-- Navbar -->
@@ -107,7 +107,7 @@
 					<li class="breadcrumb-item">
 						<a href="/">Bảng tin</a>
 					</li>
-					<li class="breadcrumb-item active"></li>
+					<li class="breadcrumb-item active"><%= title%></li>
 				</ol>
 			
 				<%- body %>
@@ -157,7 +157,7 @@
 	</div>
 
 	<!-- Info Modal-->
-	
+	<% include ./info %>
 
 	<!-- Bootstrap core JavaScript-->
 	<script src="vendor/jquery/jquery.min.js"></script>
