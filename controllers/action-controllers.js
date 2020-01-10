@@ -323,7 +323,7 @@ var changeDateFormat = function (date) {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    return (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' +  year;
+    return year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
 }
 
 //<h6 style="color: aliceblue;"><%= user.name %> (<%= user.position %>)</h6>
